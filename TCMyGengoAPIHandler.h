@@ -13,7 +13,9 @@
 
 #define API_HOST @"api.mygengo.com"
 #define SANDBOX_API_HOST @"api.sandbox.mygengo.com"
-#define VERSION @"0.1"
+#define API_VERSION @"1.1"
+#define WRAPPER_VERSION @"0.1"
+#define USER_AGENT @"myGengo ObjC Library; Version %@; http://mygengo.com/;"
 
 // Classes that use the API Handler should implement the delegate protocol
 // in order to receive feedback as to the status of their requests and
