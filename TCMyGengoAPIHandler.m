@@ -35,4 +35,24 @@
   [_apiHost release]; _apiHost = nil;
   [super dealloc];
 }
+
+- (NSString*) apiSignatureWithTimestamp{  
+  NSString *key = _privateKey;
+  
+  // We're using the Unix timestamp as the data. Not sure if this is right...
+  NSString *data = [NSString stringWithFormat:@"%.0f", [aDate timeIntervalSince1970]];
+  
+  const char *cKey  = [key cStringUsingEncoding:NSASCIIStringEncoding];
+  const char *cData = [data cStringUsingEncoding:NSASCIIStringEncoding];
+
+  unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
+
+  CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+
+  NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC
+                                     length:sizeof(cHMAC)];
+
+  NSString *hash = [HMAC base64Encoding];
+  return hash;
+}
 @end
