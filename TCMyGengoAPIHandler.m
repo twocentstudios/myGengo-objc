@@ -281,11 +281,11 @@
 }
 
 - (void)getAccountStats{
-  
+  [self getFromMyGengoEndPoint:@"account/stats" withParams:nil isDelete:NO];
 }
 
 - (void)getAccountBalance{
-  
+  [self getFromMyGengoEndPoint:@"account/balance" withParams:nil isDelete:NO];
 }
 
 @end
