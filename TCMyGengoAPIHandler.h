@@ -74,7 +74,8 @@
 // Formats a POST/PUT/DELETE request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
 - (NSDictionary*) sendToMyGengoEndPoint:(NSString*)endpoint
-                             withParams:(NSDictionary*)params;
+                             withParams:(NSDictionary*)params
+                                  isPut:(BOOL)isPut;
 
 
 

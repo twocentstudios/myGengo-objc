@@ -87,41 +87,69 @@
     [CompleteURL appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
   }
   
-  // Set up HTTP Request
+  // Set up HTTP Request (it will be released at end of callback or in dealloc)
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
   
   if (isDelete){
-    [request setRequestMethod:@"DELETE"];
+    [_httpRequest setRequestMethod:@"DELETE"];
   }else{
-    [request setRequestMethod:@"GET"];
+    [_httpRequest setRequestMethod:@"GET"];
   }
   
   // Start the HTTP Request and wait for the response
   [_httpRequest startAsynchronous];
   
 }
-  // Add API sig
-  [CompleteURL appendFormat:@"?api_sig=%@", [self apiSignatureWithTimestamp]];
+
+- (NSDictionary*) sendToMyGengoEndPoint:(NSString*)endpoint 
+                              withParams:(NSDictionary*)params
+                                isPut:(BOOL)isPut{
   
-  // Add all params to the URI
-  NSArray *Keys = [params allKeys];
-  for (NSString* Key in Keys){
-    [CompleteURL appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
+  // Set up a completed url string starting with the api host
+  NSMutableString *CompleteURL = [NSMutableString stringWithString:_apiHost];
+  
+  // Add API version
+  [CompleteURL appendFormat:@"/v%@/", _apiVersion];
+  
+  // Add endpoint
+  [CompleteURL appendString:endpoint];
+  
+  // Start assembling parameters to add to post body
+  NSMutableDictionary *CompleteParams = [NSMutableDictionary dictionaryWithDictionary:params];
+  
+  // Add API sig & timestamp to params dictionary
+  NSString *Timestamp = [self formattedTimestamp];
+  [CompleteParams setObject:Timestamp forKey:@"ts"];
+  [CompleteParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
+    
+  // Add all params to the post body
+  // Per the myGengo API, these params must be sorted alphabetically by key
+  NSMutableString *CompleteBody = nil;
+  NSArray *SortedKeys = [[params allKeys] sortedArrayUsingSelector:@selector(compare:)];
+  for (NSString* Key in SortedKeys){
+    if (CompleteBody == nil) {
+      [CompleteBody stringWithFormat:@"%@=%@", Key, [params objectForKey:Key]];
+    }else{
+      [CompleteBody appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
+    }
   }
   
-  // Set up HTTP Request
+  // Set up HTTP Request (it will be released at end of callback or in dealloc)
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
+  [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
+  [_httpRequest appendPostData:[CompleteBody dataUsingEncoding:NSUTF8StringEncoding]];
+
   
-  if (isDelete){
-    [request setRequestMethod:@"DELETE"];
+  if (isPut){
+    [_httpRequest setRequestMethod:@"PUT"];
   }else{
-    [request setRequestMethod:@"GET"];
+    [_httpRequest setRequestMethod:@"POST"];
   }
   
   // Start the HTTP Request and wait for the response
