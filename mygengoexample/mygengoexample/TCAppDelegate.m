@@ -8,6 +8,7 @@
 
 #import "TCAppDelegate.h"
 #import "TCRootViewController.h"
+#import "TCMyGengoAPIHandlerTests.h"
 
 @implementation TCAppDelegate
 
@@ -21,6 +22,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [[TCMyGengoAPIHandlerTests alloc] init];
+  
   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
   // Override point for customization after application launch.
   

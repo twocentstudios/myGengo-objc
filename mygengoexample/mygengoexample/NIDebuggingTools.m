@@ -17,7 +17,7 @@
 
 #import "NIDebuggingTools.h"
 
-NSInteger NIMaxLogLevel = NILOGLEVEL_WARNING;
+NSInteger NIMaxLogLevel = NILOGLEVEL_INFO;
 BOOL NIDebugAssertionsShouldBreak = YES;
 
 #ifdef DEBUG

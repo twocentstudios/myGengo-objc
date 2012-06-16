@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NIDebuggingTools.h"
+#import "TCMyGengoAPIHandler.h"
 
-@interface TCMyGengoAPIHandlerTests : NSObject
+@interface TCMyGengoAPIHandlerTests : NSObject <TCMyGengoAPIHandlerDelegate>
 
 @end
