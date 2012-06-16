@@ -13,6 +13,18 @@
 		346511A6158D15EA00F16C96 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 346511A4158D15EA00F16C96 /* InfoPlist.strings */; };
 		346511A8158D15EA00F16C96 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511A7158D15EA00F16C96 /* main.m */; };
 		346511AC158D15EA00F16C96 /* TCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511AB158D15EA00F16C96 /* TCAppDelegate.m */; };
+		34651209158D16F400F16C96 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511B8158D16F400F16C96 /* ASIAuthenticationDialog.m */; };
+		3465120A158D16F400F16C96 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511BB158D16F400F16C96 /* ASIDataCompressor.m */; };
+		3465120B158D16F400F16C96 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511BD158D16F400F16C96 /* ASIDataDecompressor.m */; };
+		3465120C158D16F400F16C96 /* ASIDownloadCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511BF158D16F400F16C96 /* ASIDownloadCache.m */; };
+		3465120D158D16F400F16C96 /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511C1158D16F400F16C96 /* ASIFormDataRequest.m */; };
+		3465120E158D16F400F16C96 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511C3158D16F400F16C96 /* ASIHTTPRequest.m */; };
+		3465120F158D16F400F16C96 /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511C7158D16F400F16C96 /* ASIInputStream.m */; };
+		34651210158D16F400F16C96 /* ASINetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 346511C9158D16F400F16C96 /* ASINetworkQueue.m */; };
+		34651233158D171900F16C96 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 3465122F158D171900F16C96 /* CHANGELOG.md */; };
+		34651234158D171900F16C96 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 34651231158D171900F16C96 /* JSONKit.m */; };
+		34651235158D171900F16C96 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 34651232158D171900F16C96 /* README.md */; };
+		34651237158D173700F16C96 /* libcommonCrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 34651236158D173700F16C96 /* libcommonCrypto.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +38,33 @@
 		346511A9158D15EA00F16C96 /* mygengoexample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mygengoexample-Prefix.pch"; sourceTree = "<group>"; };
 		346511AA158D15EA00F16C96 /* TCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TCAppDelegate.h; sourceTree = "<group>"; };
 		346511AB158D15EA00F16C96 /* TCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TCAppDelegate.m; sourceTree = "<group>"; };
+		346511B4158D16E700F16C96 /* TCMyGengoAPIHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TCMyGengoAPIHandler.h; path = ../../TCMyGengoAPIHandler.h; sourceTree = "<group>"; };
+		346511B5158D16E700F16C96 /* TCMyGengoAPIHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TCMyGengoAPIHandler.m; path = ../../TCMyGengoAPIHandler.m; sourceTree = "<group>"; };
+		346511B7158D16F400F16C96 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
+		346511B8158D16F400F16C96 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
+		346511B9158D16F400F16C96 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
+		346511BA158D16F400F16C96 /* ASIDataCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIDataCompressor.h; sourceTree = "<group>"; };
+		346511BB158D16F400F16C96 /* ASIDataCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIDataCompressor.m; sourceTree = "<group>"; };
+		346511BC158D16F400F16C96 /* ASIDataDecompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIDataDecompressor.h; sourceTree = "<group>"; };
+		346511BD158D16F400F16C96 /* ASIDataDecompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIDataDecompressor.m; sourceTree = "<group>"; };
+		346511BE158D16F400F16C96 /* ASIDownloadCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIDownloadCache.h; sourceTree = "<group>"; };
+		346511BF158D16F400F16C96 /* ASIDownloadCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIDownloadCache.m; sourceTree = "<group>"; };
+		346511C0158D16F400F16C96 /* ASIFormDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIFormDataRequest.h; sourceTree = "<group>"; };
+		346511C1158D16F400F16C96 /* ASIFormDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIFormDataRequest.m; sourceTree = "<group>"; };
+		346511C2158D16F400F16C96 /* ASIHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIHTTPRequest.h; sourceTree = "<group>"; };
+		346511C3158D16F400F16C96 /* ASIHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIHTTPRequest.m; sourceTree = "<group>"; };
+		346511C4158D16F400F16C96 /* ASIHTTPRequestConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIHTTPRequestConfig.h; sourceTree = "<group>"; };
+		346511C5158D16F400F16C96 /* ASIHTTPRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIHTTPRequestDelegate.h; sourceTree = "<group>"; };
+		346511C6158D16F400F16C96 /* ASIInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIInputStream.h; sourceTree = "<group>"; };
+		346511C7158D16F400F16C96 /* ASIInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIInputStream.m; sourceTree = "<group>"; };
+		346511C8158D16F400F16C96 /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASINetworkQueue.h; sourceTree = "<group>"; };
+		346511C9158D16F400F16C96 /* ASINetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASINetworkQueue.m; sourceTree = "<group>"; };
+		346511CA158D16F400F16C96 /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
+		3465122F158D171900F16C96 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
+		34651230158D171900F16C96 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		34651231158D171900F16C96 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		34651232158D171900F16C96 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		34651236158D173700F16C96 /* libcommonCrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcommonCrypto.dylib; path = usr/lib/system/libcommonCrypto.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34651237158D173700F16C96 /* libcommonCrypto.dylib in Frameworks */,
 				3465119C158D15EA00F16C96 /* UIKit.framework in Frameworks */,
 				3465119E158D15EA00F16C96 /* Foundation.framework in Frameworks */,
 				346511A0158D15EA00F16C96 /* CoreGraphics.framework in Frameworks */,
@@ -45,6 +85,7 @@
 		3465118C158D15EA00F16C96 = {
 			isa = PBXGroup;
 			children = (
+				34651236158D173700F16C96 /* libcommonCrypto.dylib */,
 				346511A1158D15EA00F16C96 /* mygengoexample */,
 				3465119A158D15EA00F16C96 /* Frameworks */,
 				34651198158D15EA00F16C96 /* Products */,
@@ -72,6 +113,7 @@
 		346511A1158D15EA00F16C96 /* mygengoexample */ = {
 			isa = PBXGroup;
 			children = (
+				346511B2158D16CC00F16C96 /* lib */,
 				346511AA158D15EA00F16C96 /* TCAppDelegate.h */,
 				346511AB158D15EA00F16C96 /* TCAppDelegate.m */,
 				346511A2158D15EA00F16C96 /* Supporting Files */,
@@ -88,6 +130,65 @@
 				346511A9158D15EA00F16C96 /* mygengoexample-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		346511B2158D16CC00F16C96 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				3465122E158D171900F16C96 /* JSONKit */,
+				346511B6158D16F400F16C96 /* ASIHTTPRequest */,
+				346511B3158D16D700F16C96 /* myGengoAPIHandler */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		346511B3158D16D700F16C96 /* myGengoAPIHandler */ = {
+			isa = PBXGroup;
+			children = (
+				346511B4158D16E700F16C96 /* TCMyGengoAPIHandler.h */,
+				346511B5158D16E700F16C96 /* TCMyGengoAPIHandler.m */,
+			);
+			name = myGengoAPIHandler;
+			sourceTree = "<group>";
+		};
+		346511B6158D16F400F16C96 /* ASIHTTPRequest */ = {
+			isa = PBXGroup;
+			children = (
+				346511B7158D16F400F16C96 /* ASIAuthenticationDialog.h */,
+				346511B8158D16F400F16C96 /* ASIAuthenticationDialog.m */,
+				346511B9158D16F400F16C96 /* ASICacheDelegate.h */,
+				346511BA158D16F400F16C96 /* ASIDataCompressor.h */,
+				346511BB158D16F400F16C96 /* ASIDataCompressor.m */,
+				346511BC158D16F400F16C96 /* ASIDataDecompressor.h */,
+				346511BD158D16F400F16C96 /* ASIDataDecompressor.m */,
+				346511BE158D16F400F16C96 /* ASIDownloadCache.h */,
+				346511BF158D16F400F16C96 /* ASIDownloadCache.m */,
+				346511C0158D16F400F16C96 /* ASIFormDataRequest.h */,
+				346511C1158D16F400F16C96 /* ASIFormDataRequest.m */,
+				346511C2158D16F400F16C96 /* ASIHTTPRequest.h */,
+				346511C3158D16F400F16C96 /* ASIHTTPRequest.m */,
+				346511C4158D16F400F16C96 /* ASIHTTPRequestConfig.h */,
+				346511C5158D16F400F16C96 /* ASIHTTPRequestDelegate.h */,
+				346511C6158D16F400F16C96 /* ASIInputStream.h */,
+				346511C7158D16F400F16C96 /* ASIInputStream.m */,
+				346511C8158D16F400F16C96 /* ASINetworkQueue.h */,
+				346511C9158D16F400F16C96 /* ASINetworkQueue.m */,
+				346511CA158D16F400F16C96 /* ASIProgressDelegate.h */,
+			);
+			name = ASIHTTPRequest;
+			path = "../../asi-http-request/Classes";
+			sourceTree = "<group>";
+		};
+		3465122E158D171900F16C96 /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				3465122F158D171900F16C96 /* CHANGELOG.md */,
+				34651230158D171900F16C96 /* JSONKit.h */,
+				34651231158D171900F16C96 /* JSONKit.m */,
+				34651232158D171900F16C96 /* README.md */,
+			);
+			name = JSONKit;
+			path = ../../JSONKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +243,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				346511A6158D15EA00F16C96 /* InfoPlist.strings in Resources */,
+				34651233158D171900F16C96 /* CHANGELOG.md in Resources */,
+				34651235158D171900F16C96 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +257,15 @@
 			files = (
 				346511A8158D15EA00F16C96 /* main.m in Sources */,
 				346511AC158D15EA00F16C96 /* TCAppDelegate.m in Sources */,
+				34651209158D16F400F16C96 /* ASIAuthenticationDialog.m in Sources */,
+				3465120A158D16F400F16C96 /* ASIDataCompressor.m in Sources */,
+				3465120B158D16F400F16C96 /* ASIDataDecompressor.m in Sources */,
+				3465120C158D16F400F16C96 /* ASIDownloadCache.m in Sources */,
+				3465120D158D16F400F16C96 /* ASIFormDataRequest.m in Sources */,
+				3465120E158D16F400F16C96 /* ASIHTTPRequest.m in Sources */,
+				3465120F158D16F400F16C96 /* ASIInputStream.m in Sources */,
+				34651210158D16F400F16C96 /* ASINetworkQueue.m in Sources */,
+				34651234158D171900F16C96 /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +332,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mygengoexample/mygengoexample-Prefix.pch";
 				INFOPLIST_FILE = "mygengoexample/mygengoexample-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -231,6 +347,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "mygengoexample/mygengoexample-Prefix.pch";
 				INFOPLIST_FILE = "mygengoexample/mygengoexample-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)/usr/lib/system\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
