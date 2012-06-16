@@ -117,7 +117,7 @@
   [CompleteURL appendFormat:@"&api_key=%@", _credentials.publicKey];
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
-  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
+  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
@@ -169,12 +169,12 @@
   }
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
-  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
+  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
   [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
-  [_httpRequest appendPostData:[CompleteBody dataUsingEncoding:NSUTF8StringEncoding]];
+  [_httpRequest appendPostData:[[CompleteBody stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding]];
   [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
 
   
