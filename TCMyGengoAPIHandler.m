@@ -73,6 +73,9 @@
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", _apiVersion];
   
+  // Add endpoint
+  [CompleteURL appendString:endpoint];
+  
   // Add API sig & timestamp
   NSString *Timestamp = [self formattedTimestamp];
   [CompleteURL appendFormat:@"?api_sig=%@", [self apiSignatureWithTimestamp:Timestamp]];
