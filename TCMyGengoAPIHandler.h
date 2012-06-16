@@ -45,6 +45,7 @@
   NSString* _apiHost;
   
   ASIHTTPRequest* _httpRequest;
+  id <TCMyGengoAPIHandlerDelegate> _delegate;
 }
 
 // Default initializer
@@ -69,12 +70,14 @@
 - (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp;  
 
 // Formats a GET request based on a provided endpoint URL and parameters
+// Formats a GET/DELETE request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
 - (NSDictionary*) getFromMyGengoEndPoint:(NSString*)endpoint 
                               withParams:(NSDictionary*)params
                                 isDelete:(BOOL)isDelete;
 
 // Formats a POST/PUT/DELETE request based on a provided endpoint URL and parameters
+// Formats a POST/PUT request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
 - (NSDictionary*) sendToMyGengoEndPoint:(NSString*)endpoint
                              withParams:(NSDictionary*)params
