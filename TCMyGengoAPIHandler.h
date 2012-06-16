@@ -50,9 +50,20 @@
             isSandboxed:(BOOL)isSandboxed;
 
 
+// Stats for the current account
+- (void) getAccountStats;
+
+// Balance for the current account
+- (void) getAccountBalance;
+
+@private
+
+// Helper function for returning a UNIX timestamp intergerized and returned as a string
+- (NSString*) formattedTimestamp;
+
 // Creates HMAC SHA-1 hash of private key signed with current time
 // in GMT converted to an int then a string
-- (NSString*) apiSignatureWithTimestamp;
+- (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp;  
 
 // Formats a GET request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
@@ -66,11 +77,7 @@
                              withParams:(NSDictionary*)params;
 
 
-// Stats for the current account
-- (void) getAccountStats;
 
-// Balance for the current account
-- (void) getAccountBalance;
 
 
 

@@ -41,14 +41,16 @@
 
 #pragma mark Private
 
-- (NSString*) apiSignatureWithTimestamp{  
-  NSString *key = _privateKey;
-  
+- (NSString*) formattedTimestamp{
   // We're using the Unix timestamp as the data. Not sure if this is right...
-  NSString *data = [NSString stringWithFormat:@"%.0f", [aDate timeIntervalSince1970]];
-  
+  return [NSString stringWithFormat:@"%.0f", [aDate timeIntervalSince1970]];
+}
+
+- (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp{  
+  NSString *key = _privateKey;
+    
   const char *cKey  = [key cStringUsingEncoding:NSASCIIStringEncoding];
-  const char *cData = [data cStringUsingEncoding:NSASCIIStringEncoding];
+  const char *cData = [timestamp cStringUsingEncoding:NSASCIIStringEncoding];
 
   unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
 
@@ -71,6 +73,33 @@
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", _apiVersion];
   
+  // Add API sig & timestamp
+  NSString *Timestamp = [self formattedTimestamp];
+  [CompleteURL appendFormat:@"?api_sig=%@", [self apiSignatureWithTimestamp:Timestamp]];
+  [CompleteURL appendFormat:@"&ts=%@", Timestamp];
+  
+  // Add all params to the URI
+  NSArray *Keys = [params allKeys];
+  for (NSString* Key in Keys){
+    [CompleteURL appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
+  }
+  
+  // Set up HTTP Request
+  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
+  [_httpRequest setDelegate:self];
+  [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
+  [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
+  
+  if (isDelete){
+    [request setRequestMethod:@"DELETE"];
+  }else{
+    [request setRequestMethod:@"GET"];
+  }
+  
+  // Start the HTTP Request and wait for the response
+  [_httpRequest startAsynchronous];
+  
+}
   // Add API sig
   [CompleteURL appendFormat:@"?api_sig=%@", [self apiSignatureWithTimestamp]];
   
