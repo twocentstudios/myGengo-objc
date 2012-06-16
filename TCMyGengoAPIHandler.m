@@ -214,19 +214,17 @@
   // If the server did not return 'ok', create a new error object and return that
   if ((Error == nil) && ![[ResponseDictionary objectForKey:@"opstat"] isEqualToString:@"ok"]){
     NSInteger Code = [[[ResponseDictionary objectForKey:@"err"] objectForKey:@"code"] integerValue];
-    NSString* Message = [[ResponseDictionary objectForKey:@"err"] objectForKey:@"msg"];
+    // NSString* Message = [[ResponseDictionary objectForKey:@"err"] objectForKey:@"msg"];
     // Attach the full response dictionary to the userInfo key
     Error = [NSError errorWithDomain:@"api.mygengo.com" code:Code userInfo:ResponseDictionary];
-    [Error setLocalizedDescription:Message];
   }
   
   // If the response parameter was not found, create a new error object
   if ((Error == nil) && ![ResponseDictionary objectForKey:@"response"]){
     NSInteger Code = -1;  // Default error code
-    NSString* Message = @"TCMyGengoAPIHandler: Response object not found";
+    // NSString* Message = @"TCMyGengoAPIHandler: Response object not found";
     // Attach the full response dictionary to the userInfo key
     Error = [NSError errorWithDomain:@"TCMyGengoAPIHandler" code:Code userInfo:ResponseDictionary];
-    [Error setLocalizedDescription:Message];
   }
   
   if (Error != nil){  // Response with error
