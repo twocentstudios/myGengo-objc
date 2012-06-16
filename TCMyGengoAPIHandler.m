@@ -205,6 +205,10 @@
   if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidLoadDictionary:responseDictionary:)]{
     [_delegate myGengoAPIHandlerDidLoadDictionary:self responseDictionary:[ResponseDictionary objectForKey:@"response"]];
   }
+  
+  // Clear out the request object and release it
+  [request clearDelegatesAndCancel]; 
+  [request release]; request = nil;
 }
 
 // Let the delegate know there was an error in the HTTP request
@@ -212,7 +216,11 @@
   // Pass the request error directly to the delegate
   if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:withError:)]{
     [_delegate myGengoAPIHandlerDidFail:self withError:[request error]];
-  }  
+  }
+  
+  // Clear out the request object and release it
+  [request clearDelegatesAndCancel]; 
+  [request release]; request = nil;
 }
 
 @end
