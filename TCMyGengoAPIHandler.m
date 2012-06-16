@@ -119,6 +119,7 @@
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+  [_httpRequest setTimeOutSeconds:30];  // Default is 10, which might be too short
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
@@ -172,6 +173,7 @@
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
   [_httpRequest setDelegate:self];
+  [_httpRequest setTimeOutSeconds:30];  // Default is 10, which might be too short
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
   [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
