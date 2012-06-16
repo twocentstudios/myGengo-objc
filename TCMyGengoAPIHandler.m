@@ -77,7 +77,7 @@
 
 - (NSString *)formattedTimestamp{
   // We're using the Unix timestamp as the data. Not sure if this is right...
-  return [NSString stringWithFormat:@"%.0f", [aDate timeIntervalSince1970]];
+  return [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]];
 }
 
 - (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp{  
@@ -89,15 +89,16 @@
   unsigned char cHMAC[CC_SHA1_DIGEST_LENGTH];
 
   CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
+  
+  NSMutableString* HMAC = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+  
+  for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+    [HMAC appendFormat:@"%02x", cHMAC[i]];
 
-  NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC
-                                     length:sizeof(cHMAC)];
-
-  NSString *hash = [HMAC base64Encoding];
-  return hash;
+  return HMAC;
 }
 
-- (NSDictionary *)getFromMyGengoEndPoint:(NSString*)endpoint 
+- (void)getFromMyGengoEndPoint:(NSString*)endpoint 
                               withParams:(NSDictionary*)params
                                 isDelete:(BOOL)isDelete{
   
@@ -117,7 +118,7 @@
   [CompleteURL appendFormat:@"&api_key=%@", _credentials.publicKey];
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
-  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
@@ -134,7 +135,7 @@
   
 }
 
-- (NSDictionary *)sendToMyGengoEndPoint:(NSString*)endpoint 
+- (void)sendToMyGengoEndPoint:(NSString*)endpoint 
                              withParams:(NSDictionary*)params
                                   isPut:(BOOL)isPut{
   
@@ -162,14 +163,14 @@
   NSArray *SortedKeys = [[params allKeys] sortedArrayUsingSelector:@selector(compare:)];
   for (NSString* Key in SortedKeys){
     if (CompleteBody == nil) {
-      [CompleteBody stringWithFormat:@"%@=%@", Key, [params objectForKey:Key]];
+      CompleteBody = [NSString stringWithFormat:@"%@=%@", Key, [params objectForKey:Key]];
     }else{
       [CompleteBody appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
     }
   }
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
-  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+  _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
@@ -194,7 +195,7 @@
 // Let the delegate know we've started a request
 - (void)requestStarted:(ASIHTTPRequest *)request{
   NSString* EndPoint = [[request userInfo] objectForKey:@"endpoint"];
-  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidStartLoad:fromEndPoint:)]{
+  if ([_delegate respondsToSelector:@selector(myGengoAPIHandlerDidStartLoad:fromEndPoint:)]){
     [_delegate myGengoAPIHandlerDidStartLoad:self fromEndPoint:EndPoint];
   }
 }
@@ -229,7 +230,7 @@
   }
   
   if (Error != nil){  // Response with error
-    if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]{
+    if ([_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]){
       [_delegate myGengoAPIHandlerDidFail:self 
                              fromEndPoint:EndPoint
                                 withError:Error];
@@ -237,7 +238,7 @@
   }else{              // Respond with success
   
     // If everything checks out, pass off ONLY the response dictionary to the delegate
-    if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidLoadDictionary:fromEndPoint:responseDictionary:)]{
+    if ([_delegate respondsToSelector:@selector(myGengoAPIHandlerDidLoadDictionary:fromEndPoint:responseDictionary:)]){
       [_delegate myGengoAPIHandlerDidLoadDictionary:self 
                                        fromEndPoint:EndPoint
                                  responseDictionary:[ResponseDictionary objectForKey:@"response"]];
@@ -254,7 +255,7 @@
   NSString* EndPoint = [[request userInfo] objectForKey:@"endpoint"];
 
   // Pass the request error directly to the delegate
-  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]{
+  if ([_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]){
     [_delegate myGengoAPIHandlerDidFail:self 
                             fromEndPoint:EndPoint 
                                withError:[request error]];

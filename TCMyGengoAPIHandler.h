@@ -83,21 +83,21 @@
 # pragma mark Private
 
 // Helper function for returning a UNIX timestamp intergerized and returned as a string
-- (NSString*) formattedTimestamp;
+- (NSString *)formattedTimestamp;
 
 // Creates HMAC SHA-1 hash of private key signed with current time
 // in GMT converted to an int then a string
-- (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp;  
+- (NSString *)apiSignatureWithTimestamp:(NSString *)timestamp;  
 
 // Formats a GET/DELETE request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
-- (NSDictionary*) getFromMyGengoEndPoint:(NSString*)endpoint 
+- (void)getFromMyGengoEndPoint:(NSString *)endpoint 
                               withParams:(NSDictionary*)params
                                 isDelete:(BOOL)isDelete;
 
 // Formats a POST/PUT request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
-- (NSDictionary*) sendToMyGengoEndPoint:(NSString*)endpoint
+- (void)sendToMyGengoEndPoint:(NSString *)endpoint
                              withParams:(NSDictionary*)params
                                   isPut:(BOOL)isPut;
 
