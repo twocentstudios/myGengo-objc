@@ -35,24 +35,42 @@
                        withError: (NSError*)error;
 @end
 
-@interface TCMyGengoAPIHandler : NSObject <ASIHTTPRequestDelegate>{ 
-  BOOL _sandbox;
+// Credentials are managed in a singleton. Create the singleton once in
+// the AppDelegate, set your credentials, and pass the singleton
+// to each API handler instance that you create.
+
+@interface TCMyGengoAPICredentials : NSObject{
+  BOOL _isSandboxed;
   NSString* _publicKey;
   NSString* _privateKey;
-  NSString* _apiVersion;
-  BOOL _debug;
-  NSString* _userAgent;
-  NSString* _apiHost;
-  
+}
+
+@property (nonatomic, readonly) NSString *publicKey;
+@property (nonatomic, readonly) NSString *privateKey;
+@property (nonatomic, readonly) BOOL isSandboxed;
+
++ (TCMyGengoAPICredentials *)sharedCredentials;
+- (void)setCredentialsWithPublicKey:(NSString *)publicKey
+                         privateKey:(NSString *)privateKey
+                        isSandboxed:(BOOL)isSandboxed;
+
+@end
+
+@interface TCMyGengoAPIHandler : NSObject <ASIHTTPRequestDelegate>{ 
+  TCMyGengoAPICredentials* _credentials;
   ASIHTTPRequest* _httpRequest;
   id <TCMyGengoAPIHandlerDelegate> _delegate;
 }
 
-// Default initializer
-- (id)initWithPublicKey:(NSString*)publicKey 
-             privateKey:(NSString*)privateKey
-            isSandboxed:(BOOL)isSandboxed;
+@property (nonatomic, readonly) TCMyGengoAPICredentials *credentials;
+@property (nonatomic, readonly) NSString *apiHost;
+@property (nonatomic, readonly) NSString *userAgent;
+@property (nonatomic, readonly) NSString *apiVersion;
 
+// Default initializer
+- (id)initWithDelegate:(id<TCMyGengoAPIHandlerDelegate>)delegate Credentials:(TCMyGengoAPICredentials *)credentials;
+// Shortcut for initializing with [TCMyGengoCredentialsManager sharedCredentials]
+- (id)initWithDelegate:(id<TCMyGengoAPIHandlerDelegate>)delegate;
 
 // Stats for the current account
 - (void) getAccountStats;
@@ -69,14 +87,12 @@
 // in GMT converted to an int then a string
 - (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp;  
 
-// Formats a GET request based on a provided endpoint URL and parameters
 // Formats a GET/DELETE request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
 - (NSDictionary*) getFromMyGengoEndPoint:(NSString*)endpoint 
                               withParams:(NSDictionary*)params
                                 isDelete:(BOOL)isDelete;
 
-// Formats a POST/PUT/DELETE request based on a provided endpoint URL and parameters
 // Formats a POST/PUT request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
 - (NSDictionary*) sendToMyGengoEndPoint:(NSString*)endpoint

@@ -8,47 +8,80 @@
 
 #import "TCMyGengoAPIHandler.h"
 
+
+@implementation TCMyGengoAPICredentials
+
+@synthesize isSandboxed = _isSandboxed;
+@synthesize publicKey = _publicKey;
+@synthesize privateKey = _privateKey;
+
++ (TCMyGengoAPICredentials *)sharedCredentials
+{
+  static TCMyGengoAPICredentials *sharedCredentials;
+  
+  @synchronized(self)
+  {
+    if (!sharedCredentials)
+      sharedCredentials = [[TCMyGengoAPICredentials alloc] init];
+    
+    return sharedCredentials;
+  }
+}
+
+- (void)setCredentialsWithPublicKey:(NSString *)publicKey
+                         privateKey:(NSString *)privateKey
+                        isSandboxed:(BOOL)isSandboxed{
+  @synchronized(self) {
+    [_publicKey release];
+    _publicKey = [publicKey copy];
+    
+    [_privateKey release];
+    _privateKey = [privateKey copy];
+    
+    _isSandboxed = isSandboxed;
+  }
+}
+
+@end
+
 @implementation TCMyGengoAPIHandler
+
+@synthesize credentials = _credentials;
 
 #pragma mark NSObject
 
-- (id)initWithPublicKey:(NSString*)publicKey 
-             privateKey:(NSString*)privateKey
-            isSandboxed:(BOOL)isSandboxed{
-  
+- (id)initWithDelegate:(id<TCMyGengoAPIHandlerDelegate>)delegate 
+           Credentials:(TCMyGengoAPICredentials *)credentials{
   if ((self = [super init])){
-    _publicKey = [publicKey copy];
-    _privateKey = [privateKey copy];
-    _apiVersion = [NSString stringWithString:API_VERSION];
-    _debug = NO;
-    _userAgent = [NSString stringWithFormat:USER_AGENT, WRAPPER_VERSION];
-    _sandboxed = isSandboxed;
-    _apiHost = _sandboxed ? [NSString stringWithString:SANDBOX_API_HOST] : [NSString stringWithString:API_HOST];
+    _delegate = delegate;
+    _credentials = credentials;
   }
   
+  return self;
+}
+
+- (id)initWithDelegate:(id<TCMyGengoAPIHandlerDelegate>)delegate{
+  return [self initWithDelegate:delegate 
+                    Credentials:[TCMyGengoAPICredentials sharedCredentials]];
 }
 
 - (void)dealloc{
-  [_publicKey release]; _publicKey = nil;
-  [_privateKey release]; _privateKey = nil;
-  [_apiVersion release]; _apiVersion = nil;
-  [_userAgent release]; _userAgent = nil;
-  [_apiHost release]; _apiHost = nil;
   _delegate = nil;
   [_httpRequest clearDelegatesAndCancel]; 
   [_httpRequest release]; _httpRequest = nil;
   [super dealloc];
 }
 
+
 #pragma mark Private
 
-- (NSString*) formattedTimestamp{
+- (NSString *)formattedTimestamp{
   // We're using the Unix timestamp as the data. Not sure if this is right...
   return [NSString stringWithFormat:@"%.0f", [aDate timeIntervalSince1970]];
 }
 
 - (NSString*) apiSignatureWithTimestamp:(NSString*)timestamp{  
-  NSString *key = _privateKey;
+  NSString *key = _credentials.privateKey;
     
   const char *cKey  = [key cStringUsingEncoding:NSASCIIStringEncoding];
   const char *cData = [timestamp cStringUsingEncoding:NSASCIIStringEncoding];
@@ -64,15 +97,15 @@
   return hash;
 }
 
-- (NSDictionary*) getFromMyGengoEndPoint:(NSString*)endpoint 
+- (NSDictionary *)getFromMyGengoEndPoint:(NSString*)endpoint 
                               withParams:(NSDictionary*)params
                                 isDelete:(BOOL)isDelete{
   
   // Set up a completed url string that we'll append parameters to
-  NSMutableString *CompleteURL = [NSMutableString stringWithString:_apiHost];
+  NSMutableString *CompleteURL = [NSMutableString stringWithString:self.apiHost];
   
   // Add API version
-  [CompleteURL appendFormat:@"/v%@/", _apiVersion];
+  [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
   
   // Add endpoint
   [CompleteURL appendString:endpoint];
@@ -81,18 +114,13 @@
   NSString *Timestamp = [self formattedTimestamp];
   [CompleteURL appendFormat:@"?api_sig=%@", [self apiSignatureWithTimestamp:Timestamp]];
   [CompleteURL appendFormat:@"&ts=%@", Timestamp];
-  
-  // Add all params to the URI
-  NSArray *Keys = [params allKeys];
-  for (NSString* Key in Keys){
-    [CompleteURL appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
-  }
+  [CompleteURL appendFormat:@"&api_key=%@", _credentials.publicKey];
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
-  [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
+  [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
   [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
   
   if (isDelete){
@@ -106,15 +134,15 @@
   
 }
 
-- (NSDictionary*) sendToMyGengoEndPoint:(NSString*)endpoint 
-                              withParams:(NSDictionary*)params
-                                isPut:(BOOL)isPut{
+- (NSDictionary *)sendToMyGengoEndPoint:(NSString*)endpoint 
+                             withParams:(NSDictionary*)params
+                                  isPut:(BOOL)isPut{
   
   // Set up a completed url string starting with the api host
-  NSMutableString *CompleteURL = [NSMutableString stringWithString:_apiHost];
+  NSMutableString *CompleteURL = [NSMutableString stringWithString:self.apiHost];
   
   // Add API version
-  [CompleteURL appendFormat:@"/v%@/", _apiVersion];
+  [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
   
   // Add endpoint
   [CompleteURL appendString:endpoint];
@@ -126,6 +154,7 @@
   NSString *Timestamp = [self formattedTimestamp];
   [CompleteParams setObject:Timestamp forKey:@"ts"];
   [CompleteParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
+  [CompleteParams setObject:_credentials.publicKey forKey:@"api_key"];
     
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
@@ -143,7 +172,7 @@
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:CompleteURL];
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
-  [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
+  [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
   [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
   [_httpRequest appendPostData:[CompleteBody dataUsingEncoding:NSUTF8StringEncoding]];
   [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
@@ -226,7 +255,7 @@
 
   // Pass the request error directly to the delegate
   if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]{
-    [[_delegate myGengoAPIHandlerDidFail:self 
+    [_delegate myGengoAPIHandlerDidFail:self 
                             fromEndPoint:EndPoint 
                                withError:[request error]];
   }
@@ -234,6 +263,28 @@
   // Clear out the request object and release it
   [request clearDelegatesAndCancel]; 
   [request release]; request = nil;
+}
+
+#pragma mark Public
+
+- (NSString *)apiHost{
+ return API_HOST;
+}
+
+- (NSString *)userAgent{
+ return USER_AGENT;
+}
+
+- (NSString *)apiVersion{
+ return API_VERSION;
+}
+
+- (void)getAccountStats{
+  
+}
+
+- (void)getAccountBalance{
+  
 }
 
 @end
