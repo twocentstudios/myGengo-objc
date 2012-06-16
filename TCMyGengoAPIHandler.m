@@ -269,7 +269,7 @@
 #pragma mark Public
 
 - (NSString *)apiHost{
- return API_HOST;
+  return [_credentials isSandboxed] ? SANDBOX_API_HOST : API_HOST;
 }
 
 - (NSString *)userAgent{
