@@ -7,6 +7,7 @@
 //
 
 #import "TCAppDelegate.h"
+#import "TCRootViewController.h"
 
 @implementation TCAppDelegate
 
@@ -20,11 +21,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
-    return YES;
+  self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+  // Override point for customization after application launch.
+  
+  TCRootViewController *RootViewController = [[[TCRootViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+  
+  [self.window addSubview:RootViewController.view];
+  [self.window makeKeyAndVisible];
+  return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

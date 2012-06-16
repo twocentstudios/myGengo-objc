@@ -23,6 +23,8 @@
 // in order to receive feedback as to the status of their requests and
 // the responses themselves from the server
 
+@class TCMyGengoAPIHandler;
+
 @protocol TCMyGengoAPIHandlerDelegate <NSObject>
 @optional
 - (void)myGengoAPIHandlerDidStartLoad: (TCMyGengoAPIHandler*)handler 
@@ -78,7 +80,7 @@
 // Balance for the current account
 - (void) getAccountBalance;
 
-@private
+# pragma mark Private
 
 // Helper function for returning a UNIX timestamp intergerized and returned as a string
 - (NSString*) formattedTimestamp;
