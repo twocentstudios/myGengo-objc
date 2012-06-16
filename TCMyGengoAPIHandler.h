@@ -25,10 +25,13 @@
 
 @protocol TCMyGengoAPIHandlerDelegate <NSObject>
 @optional
-- (void)myGengoAPIHandlerDidStartLoad: (TCMyGengoAPIHandler*)handler;
-- (void)myGengoAPIHandlerDidLoadDictionary: (TCMyGengoAPIHandler*)handler 
+- (void)myGengoAPIHandlerDidStartLoad: (TCMyGengoAPIHandler*)handler 
+                         fromEndPoint: (NSString*)endpoint;
+- (void)myGengoAPIHandlerDidLoadDictionary: (TCMyGengoAPIHandler*)handler
+                              fromEndPoint: (NSString*)endpoint
                         responseDictionary: (NSDictionary*)response;
 - (void)myGengoAPIHandlerDidFail: (TCMyGengoAPIHandler*)handler 
+                    fromEndPoint: (NSString*)endpoint
                        withError: (NSError*)error;
 @end
 

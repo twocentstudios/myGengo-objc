@@ -92,6 +92,7 @@
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
+  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
   
   if (isDelete){
     [_httpRequest setRequestMethod:@"DELETE"];
@@ -144,6 +145,7 @@
   [_httpRequest addRequestHeader:@"User-Agent" value:_userAgent];
   [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
   [_httpRequest appendPostData:[CompleteBody dataUsingEncoding:NSUTF8StringEncoding]];
+  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
 
   
   if (isPut){
@@ -161,14 +163,16 @@
 
 // Let the delegate know we've started a request
 - (void)requestStarted:(ASIHTTPRequest *)request{
-  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidStartLoad:)]{
-    [_delegate myGengoAPIHandlerDidStartLoad:self];
+  NSString* EndPoint = [[request userInfo] objectForKey:@"endpoint"];
+  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidStartLoad:fromEndPoint:)]{
+    [_delegate myGengoAPIHandlerDidStartLoad:self fromEndPoint:EndPoint];
   }
 }
 
 // Returns ONLY the response parameter to the delegate if there were no errors
 - (void)requestFinished:(ASIHTTPRequest *)request{
   NSError* Error = nil;
+  NSString* EndPoint = [[request userInfo] objectForKey:@"endpoint"];
   
   // Decode JSON data into an NSDictionary
   NSDictionary* ResponseDictionary = [[JSONDecoder decoder] objectWithData:[request reponseData] error:&Error];
@@ -194,16 +198,20 @@
     [Error setLocalizedDescription:Message];
   }
   
-  if (Error != nil){
-    if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:withError:)]{
-      [_delegate myGengoAPIHandlerDidFail:self withError:Error];
+  if (Error != nil){  // Response with error
+    if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]{
+      [_delegate myGengoAPIHandlerDidFail:self 
+                             fromEndPoint:EndPoint
+                                withError:Error];
     }  
-    return;
-  }
+  }else{              // Respond with success
   
-  // If everything checks out, pass off ONLY the response dictionary to the delegate
-  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidLoadDictionary:responseDictionary:)]{
-    [_delegate myGengoAPIHandlerDidLoadDictionary:self responseDictionary:[ResponseDictionary objectForKey:@"response"]];
+    // If everything checks out, pass off ONLY the response dictionary to the delegate
+    if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidLoadDictionary:fromEndPoint:responseDictionary:)]{
+      [_delegate myGengoAPIHandlerDidLoadDictionary:self 
+                                       fromEndPoint:EndPoint
+                                 responseDictionary:[ResponseDictionary objectForKey:@"response"]];
+    }
   }
   
   // Clear out the request object and release it
@@ -213,9 +221,13 @@
 
 // Let the delegate know there was an error in the HTTP request
 - (void)requestFailed:(ASIHTTPRequest *)request{
+  NSString* EndPoint = [[request userInfo] objectForKey:@"endpoint"];
+
   // Pass the request error directly to the delegate
-  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:withError:)]{
-    [_delegate myGengoAPIHandlerDidFail:self withError:[request error]];
+  if [_delegate respondsToSelector:@selector(myGengoAPIHandlerDidFail:fromEndPoint:withError:)]{
+    [[_delegate myGengoAPIHandlerDidFail:self 
+                            fromEndPoint:EndPoint 
+                               withError:[request error]];
   }
   
   // Clear out the request object and release it
