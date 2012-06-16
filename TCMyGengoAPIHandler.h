@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
+#import "ASIHTTPRequest.h"
+#import "JSONKit.h"
 
 #define API_HOST @"api.mygengo.com"
 #define SANDBOX_API_HOST @"api.sandbox.mygengo.com"
@@ -30,7 +32,7 @@
                        withError: (NSError*)error;
 @end
 
-@interface TCMyGengoAPIHandler : NSObject{ 
+@interface TCMyGengoAPIHandler : NSObject <ASIHTTPRequestDelegate>{ 
   BOOL _sandbox;
   NSString* _publicKey;
   NSString* _privateKey;
@@ -38,6 +40,8 @@
   BOOL _debug;
   NSString* _userAgent;
   NSString* _apiHost;
+  
+  ASIHTTPRequest* _httpRequest;
 }
 
 // Default initializer

@@ -33,8 +33,12 @@
   [_apiVersion release]; _apiVersion = nil;
   [_userAgent release]; _userAgent = nil;
   [_apiHost release]; _apiHost = nil;
+  [_httpRequest clearDelegatesAndCancel]; 
+  [_httpRequest release]; _httpRequest = nil;
   [super dealloc];
 }
+
+#pragma mark Private
 
 - (NSString*) apiSignatureWithTimestamp{  
   NSString *key = _privateKey;
