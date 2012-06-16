@@ -57,7 +57,8 @@
 // Formats a GET request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
 - (NSDictionary*) getFromMyGengoEndPoint:(NSString*)endpoint 
-                              withParams:(NSDictionary*)params;
+                              withParams:(NSDictionary*)params
+                                isDelete:(BOOL)isDelete;
 
 // Formats a POST/PUT/DELETE request based on a provided endpoint URL and parameters
 // and returns an NSDictionary with the response
