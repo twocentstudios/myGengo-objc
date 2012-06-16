@@ -206,7 +206,7 @@
   NSString* EndPoint = [[request userInfo] objectForKey:@"endpoint"];
   
   // Decode JSON data into an NSDictionary
-  NSDictionary* ResponseDictionary = [[JSONDecoder decoder] objectWithData:[request reponseData] error:&Error];
+  NSDictionary* ResponseDictionary = [[JSONDecoder decoder] objectWithData:[request responseData] error:&Error];
  
   // If there were any errors in the decoding, return them to the delegate
   
