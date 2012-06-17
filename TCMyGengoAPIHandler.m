@@ -351,4 +351,8 @@
   }
 }
 
+- (void)postTranslationJob:(NSDictionary *)params{
+  [self sendToMyGengoEndPoint:@"translate/job" withParams:params isPut:NO];
+}
+
 @end

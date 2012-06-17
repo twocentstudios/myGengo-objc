@@ -98,6 +98,11 @@
 // status, timestamp_after, count
 - (void)getTranslationJobs:(NSDictionary *)params;
 
+// Posts a new translation job to the server
+// Required:
+// dictionary of job params for key "job"
+// job -> type/slug/body_src/lc_src/lc_tgt/tier/auto_approve/comment/callback_url/custom_data
+- (void)postTranslationJob:(NSDictionary *)params;
 
 # pragma mark Private
 
