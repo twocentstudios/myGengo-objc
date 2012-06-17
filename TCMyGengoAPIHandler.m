@@ -172,13 +172,14 @@
   [CompleteURL appendString:endpoint];
   
   // Start assembling parameters to add to post body
-  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
+  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionary];
   
   // Add API sig & timestamp to params dictionary
   NSString *Timestamp = [self formattedTimestamp];
   [DictionaryParams setObject:Timestamp forKey:@"ts"];
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
+  [DictionaryParams setObject:[params JSONString] forKey:@"data"];
   
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
