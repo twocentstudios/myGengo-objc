@@ -103,7 +103,10 @@
                                 isDelete:(BOOL)isDelete{
   
   // Set up a completed url string that we'll append parameters to
-  NSMutableString *CompleteURL = [NSMutableString stringWithString:self.apiHost];
+  NSMutableString *CompleteURL = [NSMutableString stringWithString:@"http://"];
+  
+  // Add host (sandbox or production)
+  [CompleteURL appendString:self.apiHost];
   
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
@@ -140,8 +143,11 @@
                              withParams:(NSDictionary*)params
                                   isPut:(BOOL)isPut{
   
-  // Set up a completed url string starting with the api host
-  NSMutableString *CompleteURL = [NSMutableString stringWithString:self.apiHost];
+  // Set up a completed url string that we'll append parameters to
+  NSMutableString *CompleteURL = [NSMutableString stringWithString:@"http://"];
+  
+  // Add host (sandbox or production)
+  [CompleteURL appendString:self.apiHost];
   
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
