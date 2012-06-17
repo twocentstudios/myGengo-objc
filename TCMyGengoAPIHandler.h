@@ -15,7 +15,7 @@
 
 #define API_HOST @"api.mygengo.com"
 #define SANDBOX_API_HOST @"api.sandbox.mygengo.com"
-#define API_VERSION @"1.1"
+#define API_VERSION @"2"
 #define WRAPPER_VERSION @"0.1"
 #define USER_AGENT @"myGengo ObjC Library; Version %@; http://twocentstudios.com/;" //@"myGengo Ruby Library; Version 1.8; http://mygengo.com/;"
 
@@ -74,6 +74,10 @@
 // Shortcut for initializing with [TCMyGengoCredentialsManager sharedCredentials]
 - (id)initWithDelegate:(id<TCMyGengoAPIHandlerDelegate>)delegate;
 
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Accounts and Languages
+
 // Stats for the current account
 - (void)getAccountStats;
 
@@ -88,6 +92,10 @@
 // lc_src - Optional two-character language code to filter the results on
 - (void)getServiceLanguagePairs:(NSDictionary *)params;
 
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Translation Job
+
 // Gets info on a single job
 // Options:
 // id, pre_mt (machine translation)
@@ -98,6 +106,76 @@
 // status, timestamp_after, count
 - (void)getTranslationJobs:(NSDictionary *)params;
 
+// Gets a group of jobs that were submitted together
+// Options:
+// id - id of the group
+- (void)getTranslationJobGroup:(NSDictionary *)params;
+
+// Gets feedback previously submitted for a single job
+// Required:
+// id - id of the job
+- (void)getTranslationJobFeedback:(NSDictionary *)params;
+
+// [DEPRECATED in v2] Posts a new translation job to the server
+// Required:
+// dictionary of job params for key "job"
+// job -> type/slug/body_src/lc_src/lc_tgt/tier/auto_approve/comment/callback_url/custom_data
+- (void)postTranslationJob:(NSDictionary *)params;
+
+// Posts a new translation job or jobs to the server
+// Required:
+// array of jobs for key "jobs"
+// dictionary of job params for each job
+// job -> type/slug/body_src/lc_src/lc_tgt/tier/auto_approve/comment/callback_url/custom_data
+- (void)postTranslationJobs:(NSDictionary *)params;
+
+// Posts a new translation job or jobs to the server for a quote
+// Required:
+// array of jobs for key "jobs"
+// dictionary of job params for each job
+// job -> type/slug/body_src/lc_src/lc_tgt/tier
+- (void)postTranslationJobsForQuote:(NSDictionary *)params;
+
+// Updates the specified translation job with new information
+// Required:
+// id - id of job
+// action - revise, approve, reject
+// additional parameters based on the action (see API docs)
+- (void)updateTranslationJob:(NSDictionary *)params;
+
+// Deletes the specified translation job
+// Required:
+// id - id of job
+- (void)deleteTranslationJob:(NSDictionary *)params;
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Comments
+
+// Gets all the comments for a job
+// Required:
+// id - id of the job
+- (void)getTranslationJobComments:(NSDictionary *)params;
+
+// Posts a new comment on a job
+// Required:
+// id - id of the job
+// comment (dict) -> body (dict) - full text of the comment
+- (void)postTranslationJobComment:(NSDictionary *)params;
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Revisions
+
+// Gets a specific revision to a job
+// Required:
+// id - id of the job
+// rev_id - id of the revision
+- (void)getTranslationJobRevision:(NSDictionary *)params;
+
+// Gets a list of revisions for a job
+// Required:
+// id - id of the job
+- (void)getTranslationJobRevisions:(NSDictionary *)params;
 
 # pragma mark Private
 

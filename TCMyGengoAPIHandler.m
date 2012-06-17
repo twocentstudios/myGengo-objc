@@ -172,13 +172,14 @@
   [CompleteURL appendString:endpoint];
   
   // Start assembling parameters to add to post body
-  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
+  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionary];
   
   // Add API sig & timestamp to params dictionary
   NSString *Timestamp = [self formattedTimestamp];
   [DictionaryParams setObject:Timestamp forKey:@"ts"];
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
+  [DictionaryParams setObject:[params JSONString] forKey:@"data"];
   
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
@@ -302,6 +303,9 @@
  return API_VERSION;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+// Accounts and Languages
+
 - (void)getAccountStats{
   [self getFromMyGengoEndPoint:@"account/stats" withParams:nil isDelete:NO];
 }
@@ -318,8 +322,11 @@
   [self getFromMyGengoEndPoint:@"translate/service/language_pairs" withParams:params isDelete:NO];
 }
 
+///////////////////////////////////////////////////////////////////////////////////////
+// Translation Job
+
 - (void)getTranslationJob:(NSDictionary *)params{
-  // params must have id key of string
+  // params must have id key of NSString type
   NSString *ID = [params objectForKey:@"id"];
   if (ID != nil && [ID isKindOfClass:[NSString class]]) {
     NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@", ID];
@@ -330,7 +337,7 @@
 }
 
 - (void)getTranslationJobs:(NSDictionary *)params{
-  // params may or may not have id key of array
+  // params may or may not have id key of NSArray type
   NSArray *IDs = [params objectForKey:@"ids"];
   if (IDs != nil && [IDs isKindOfClass:[NSArray class]]) {
     NSMutableString *IDList = nil;
@@ -347,6 +354,115 @@
     [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
   }else {
     [self getFromMyGengoEndPoint:@"translate/jobs" withParams:params isDelete:NO];
+  }
+}
+
+- (void)getTranslationJobGroup:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/jobs/group/%@", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }
+}
+
+- (void)getTranslationJobFeedback:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@/feedback", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }
+}
+
+- (void)postTranslationJob:(NSDictionary *)params{
+  [self sendToMyGengoEndPoint:@"translate/job" withParams:params isPut:NO];
+}
+
+- (void)postTranslationJobs:(NSDictionary *)params{
+  [self sendToMyGengoEndPoint:@"translate/jobs" withParams:params isPut:NO];
+}
+
+- (void)postTranslationJobsForQuote:(NSDictionary *)params{
+  [self sendToMyGengoEndPoint:@"translate/service/quote" withParams:params isPut:NO];
+}
+
+- (void)updateTranslationJob:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self sendToMyGengoEndPoint:EndPoint withParams:Params isPut:YES];
+  }
+}
+
+- (void)deleteTranslationJob:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:YES];
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Comments
+
+- (void)getTranslationJobComments:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@/comments", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }
+}
+
+- (void)postTranslationJobComment:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@/comment", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self sendToMyGengoEndPoint:EndPoint withParams:Params isPut:NO];
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Revisions
+
+- (void)getTranslationJobRevision:(NSDictionary *)params{
+  // params must have id and rev_id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  NSString *RevID = [params objectForKey:@"rev_id"];
+  if (ID != nil && RevID != nil && [ID isKindOfClass:[NSString class]] && [RevID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@/revision/%@", ID, RevID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [Params removeObjectForKey:@"rev_id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }
+}
+
+- (void)getTranslationJobRevisions:(NSDictionary *)params{
+  // params must have id key of NSString type
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@/revisions", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
   }
 }
 
