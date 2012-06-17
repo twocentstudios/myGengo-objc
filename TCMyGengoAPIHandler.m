@@ -110,9 +110,6 @@
   
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
-  
-  // Add endpoint
-  [CompleteURL appendString:endpoint];
     
   // Add API sig, API key, & timestamp to the params dictionary
   NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
@@ -120,6 +117,16 @@
   [DictionaryParams setObject:Timestamp forKey:@"ts"];
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
+  
+  // If id parameter is included, append it to the endpoint first, then remove it
+  NSMutableString *CompleteEndpoint = [NSMutableString stringWithString:endpoint];
+  if ([DictionaryParams objectForKey:@"id"] != nil) {
+    [CompleteEndpoint appendFormat:@"/%@", [DictionaryParams objectForKey:@"id"]];
+    [DictionaryParams removeObjectForKey:@"id"];
+  }
+  
+  // Add endpoint
+  [CompleteURL appendString:CompleteEndpoint];
   
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
@@ -142,7 +149,7 @@
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
-  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
+  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:CompleteEndpoint forKey:@"endpoint"]];
   
   if (isDelete){
     [_httpRequest setRequestMethod:@"DELETE"];
@@ -168,27 +175,34 @@
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
   
-  // Add endpoint
-  [CompleteURL appendString:endpoint];
-  
   // Start assembling parameters to add to post body
-  NSMutableDictionary *CompleteParams = [NSMutableDictionary dictionaryWithDictionary:params];
+  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
   
   // Add API sig & timestamp to params dictionary
   NSString *Timestamp = [self formattedTimestamp];
-  [CompleteParams setObject:Timestamp forKey:@"ts"];
-  [CompleteParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
-  [CompleteParams setObject:_credentials.publicKey forKey:@"api_key"];
-    
+  [DictionaryParams setObject:Timestamp forKey:@"ts"];
+  [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
+  [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
+  
+  // If id parameter is included, append it to the endpoint first, then remove it
+  NSMutableString *CompleteEndpoint = [NSMutableString stringWithString:endpoint];
+  if ([DictionaryParams objectForKey:@"id"] != nil) {
+    [CompleteEndpoint appendFormat:@"/%@", [DictionaryParams objectForKey:@"id"]];
+    [DictionaryParams removeObjectForKey:@"id"];
+  }
+  
+  // Add endpoint
+  [CompleteURL appendString:CompleteEndpoint];
+  
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
   NSMutableString *CompleteBody = nil;
-  NSArray *SortedKeys = [[CompleteParams allKeys] sortedArrayUsingSelector:@selector(compare:)];
+  NSArray *SortedKeys = [[DictionaryParams allKeys] sortedArrayUsingSelector:@selector(compare:)];
   for (NSString* Key in SortedKeys){
     if (CompleteBody == nil) {
-      CompleteBody = [NSMutableString stringWithFormat:@"%@=%@", Key, [CompleteParams objectForKey:Key]];
+      CompleteBody = [NSMutableString stringWithFormat:@"%@=%@", Key, [DictionaryParams objectForKey:Key]];
     }else{
-      [CompleteBody appendFormat:@"&%@=%@", Key, [CompleteParams objectForKey:Key]];
+      [CompleteBody appendFormat:@"&%@=%@", Key, [DictionaryParams objectForKey:Key]];
     }
   }
   
@@ -200,7 +214,7 @@
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
   [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
   [_httpRequest appendPostData:[[CompleteBody stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding]];
-  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
+  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:CompleteEndpoint forKey:@"endpoint"]];
 
   
   if (isPut){
