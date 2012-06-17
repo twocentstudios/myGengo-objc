@@ -121,6 +121,12 @@
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
   
+  // If id parameter is included, append it to the endpoint first, then remove it
+  if ([DictionaryParams objectForKey:@"id"] != nil) {
+    [CompleteURL appendString:[DictionaryParams objectForKey:@"id"]];
+    [DictionaryParams removeObjectForKey:@"id"];
+  }
+  
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
   NSMutableString *StringParams = nil;
@@ -172,23 +178,29 @@
   [CompleteURL appendString:endpoint];
   
   // Start assembling parameters to add to post body
-  NSMutableDictionary *CompleteParams = [NSMutableDictionary dictionaryWithDictionary:params];
+  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
   
   // Add API sig & timestamp to params dictionary
   NSString *Timestamp = [self formattedTimestamp];
-  [CompleteParams setObject:Timestamp forKey:@"ts"];
-  [CompleteParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
-  [CompleteParams setObject:_credentials.publicKey forKey:@"api_key"];
-    
+  [DictionaryParams setObject:Timestamp forKey:@"ts"];
+  [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
+  [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
+  
+  // If id parameter is included, append it to the endpoint first, then remove it
+  if ([DictionaryParams objectForKey:@"id"] != nil) {
+    [CompleteURL appendString:[DictionaryParams objectForKey:@"id"]];
+    [DictionaryParams removeObjectForKey:@"id"];
+  }
+  
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
   NSMutableString *CompleteBody = nil;
-  NSArray *SortedKeys = [[CompleteParams allKeys] sortedArrayUsingSelector:@selector(compare:)];
+  NSArray *SortedKeys = [[DictionaryParams allKeys] sortedArrayUsingSelector:@selector(compare:)];
   for (NSString* Key in SortedKeys){
     if (CompleteBody == nil) {
-      CompleteBody = [NSMutableString stringWithFormat:@"%@=%@", Key, [CompleteParams objectForKey:Key]];
+      CompleteBody = [NSMutableString stringWithFormat:@"%@=%@", Key, [DictionaryParams objectForKey:Key]];
     }else{
-      [CompleteBody appendFormat:@"&%@=%@", Key, [CompleteParams objectForKey:Key]];
+      [CompleteBody appendFormat:@"&%@=%@", Key, [DictionaryParams objectForKey:Key]];
     }
   }
   
