@@ -38,6 +38,7 @@
   // Use this GET call to step through the GET stack.
   [Handler getAccountStats];
   
+  [Handler getAccountBalance];
 }
 
 
