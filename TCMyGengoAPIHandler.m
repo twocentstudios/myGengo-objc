@@ -111,22 +111,15 @@
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
     
+  // Add endpoint
+  [CompleteURL appendString:endpoint];
+  
   // Add API sig, API key, & timestamp to the params dictionary
   NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
   NSString *Timestamp = [self formattedTimestamp];
   [DictionaryParams setObject:Timestamp forKey:@"ts"];
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
-  
-  // If id parameter is included, append it to the endpoint first, then remove it
-  NSMutableString *CompleteEndpoint = [NSMutableString stringWithString:endpoint];
-  if ([DictionaryParams objectForKey:@"id"] != nil) {
-    [CompleteEndpoint appendFormat:@"/%@", [DictionaryParams objectForKey:@"id"]];
-    [DictionaryParams removeObjectForKey:@"id"];
-  }
-  
-  // Add endpoint
-  [CompleteURL appendString:CompleteEndpoint];
   
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
@@ -149,7 +142,7 @@
   [_httpRequest setDelegate:self];
   [_httpRequest addRequestHeader:@"Accept" value:@"application/json"];
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
-  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:CompleteEndpoint forKey:@"endpoint"]];
+  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
   
   if (isDelete){
     [_httpRequest setRequestMethod:@"DELETE"];
@@ -175,6 +168,9 @@
   // Add API version
   [CompleteURL appendFormat:@"/v%@/", self.apiVersion];
   
+  // Add endpoint
+  [CompleteURL appendString:endpoint];
+  
   // Start assembling parameters to add to post body
   NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
   
@@ -183,16 +179,6 @@
   [DictionaryParams setObject:Timestamp forKey:@"ts"];
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
-  
-  // If id parameter is included, append it to the endpoint first, then remove it
-  NSMutableString *CompleteEndpoint = [NSMutableString stringWithString:endpoint];
-  if ([DictionaryParams objectForKey:@"id"] != nil) {
-    [CompleteEndpoint appendFormat:@"/%@", [DictionaryParams objectForKey:@"id"]];
-    [DictionaryParams removeObjectForKey:@"id"];
-  }
-  
-  // Add endpoint
-  [CompleteURL appendString:CompleteEndpoint];
   
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
@@ -214,7 +200,7 @@
   [_httpRequest addRequestHeader:@"User-Agent" value:self.userAgent];
   [_httpRequest addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
   [_httpRequest appendPostData:[[CompleteBody stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding]];
-  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:CompleteEndpoint forKey:@"endpoint"]];
+  [_httpRequest setUserInfo:[NSDictionary dictionaryWithObject:endpoint forKey:@"endpoint"]];
 
   
   if (isPut){
@@ -330,6 +316,38 @@
 
 - (void)getServiceLanguagePairs:(NSDictionary *)params{
   [self getFromMyGengoEndPoint:@"translate/service/language_pairs" withParams:params isDelete:NO];
+}
+
+- (void)getTranslationJob:(NSDictionary *)params{
+  // params must have id key of string
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }
+}
+
+- (void)getTranslationJobs:(NSDictionary *)params{
+  // params may or may not have id key of array
+  NSArray *IDs = [params objectForKey:@"ids"];
+  if (IDs != nil && [IDs isKindOfClass:[NSArray class]]) {
+    NSMutableString *IDList = nil;
+    for (NSString *ID in IDs){
+      if (IDList == nil){
+        IDList = [NSMutableString stringWithFormat:@"%@", ID];
+      }else{
+        [IDList appendFormat:@",%@", ID];
+      }
+    }
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/jobs/%@", IDList];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"ids"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }else {
+    [self getFromMyGengoEndPoint:@"translate/jobs" withParams:params isDelete:NO];
+  }
 }
 
 @end
