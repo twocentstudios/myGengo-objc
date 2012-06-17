@@ -318,24 +318,36 @@
   [self getFromMyGengoEndPoint:@"translate/service/language_pairs" withParams:params isDelete:NO];
 }
 
-/*
-// If id(s) parameter is included, append it to the endpoint first, then remove it
-NSMutableString *CompleteEndpoint = [NSMutableString stringWithString:endpoint];
-if ([DictionaryParams objectForKey:@"id"] != nil) {
-  [CompleteEndpoint appendFormat:@"/%@", [DictionaryParams objectForKey:@"id"]];
-  [DictionaryParams removeObjectForKey:@"id"];
-}else if([DictionaryParams objectForKey:@"ids"] != nil) {
-  // [[DictionaryParams objectForKey:@"ids"] isKindOfClass:[NSArray class]];
-  NSMutableString *IDList = nil;
-  for (NSString *ID in [DictionaryParams objectForKey:@"ids"]){
-    if (IDList == nil){
-      IDList = [NSMutableString stringWithFormat:@"/%@", ID];
-    }else{
-      [IDList appendFormat:@",%@", ID];
-    }
+- (void)getTranslationJob:(NSDictionary *)params{
+  // params must have id key of string
+  NSString *ID = [params objectForKey:@"id"];
+  if (ID != nil && [ID isKindOfClass:[NSString class]]) {
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/job/%@", ID];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"id"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
   }
-  [CompleteEndpoint appendString:IDList];
-  [DictionaryParams removeObjectForKey:@"ids"];
 }
-*/
+
+- (void)getTranslationJobs:(NSDictionary *)params{
+  // params may or may not have id key of array
+  NSArray *IDs = [params objectForKey:@"ids"];
+  if (IDs != nil && [IDs isKindOfClass:[NSArray class]]) {
+    NSMutableString *IDList = nil;
+    for (NSString *ID in IDs){
+      if (IDList == nil){
+        IDList = [NSMutableString stringWithFormat:@"%@", ID];
+      }else{
+        [IDList appendFormat:@",%@", ID];
+      }
+    }
+    NSString *EndPoint = [NSString stringWithFormat:@"translate/jobs/%@", IDList];
+    NSMutableDictionary *Params = [NSMutableDictionary dictionaryWithDictionary:params];
+    [Params removeObjectForKey:@"ids"];
+    [self getFromMyGengoEndPoint:EndPoint withParams:Params isDelete:NO];
+  }else {
+    [self getFromMyGengoEndPoint:@"translate/jobs" withParams:params isDelete:NO];
+  }
+}
+
 @end

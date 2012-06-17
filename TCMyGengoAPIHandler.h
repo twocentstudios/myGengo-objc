@@ -88,6 +88,15 @@
 // lc_src - Optional two-character language code to filter the results on
 - (void)getServiceLanguagePairs:(NSDictionary *)params;
 
+// Gets info on a single job
+// Options:
+// id, pre_mt (machine translation)
+- (void)getTranslationJob:(NSDictionary *)params;
+
+// Gets list of jobs
+// Options:
+// status, timestamp_after, count
+- (void)getTranslationJobs:(NSDictionary *)params;
 
 
 # pragma mark Private
