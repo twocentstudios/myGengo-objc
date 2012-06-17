@@ -113,12 +113,28 @@
   
   // Add endpoint
   [CompleteURL appendString:endpoint];
-  
-  // Add API sig & timestamp
+    
+  // Add API sig, API key, & timestamp to the params dictionary
+  NSMutableDictionary *DictionaryParams = [NSMutableDictionary dictionaryWithDictionary:params];
   NSString *Timestamp = [self formattedTimestamp];
-  [CompleteURL appendFormat:@"?api_sig=%@", [self apiSignatureWithTimestamp:Timestamp]];
-  [CompleteURL appendFormat:@"&ts=%@", Timestamp];
-  [CompleteURL appendFormat:@"&api_key=%@", _credentials.publicKey];
+  [DictionaryParams setObject:Timestamp forKey:@"ts"];
+  [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
+  [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
+  
+  // Add all params to the post body
+  // Per the myGengo API, these params must be sorted alphabetically by key
+  NSMutableString *StringParams = nil;
+  NSArray *SortedKeys = [[DictionaryParams allKeys] sortedArrayUsingSelector:@selector(compare:)];
+  for (NSString* Key in SortedKeys){
+    if (StringParams == nil) {
+      StringParams = [NSMutableString stringWithFormat:@"?%@=%@", Key, [DictionaryParams objectForKey:Key]];
+    }else{
+      [StringParams appendFormat:@"&%@=%@", Key, [DictionaryParams objectForKey:Key]];
+    }
+  }
+  
+  // Add param string to complete url
+  [CompleteURL appendString:StringParams];
   
   // Set up HTTP Request (it will be released at end of callback or in dealloc)
   _httpRequest = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:[CompleteURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
@@ -167,12 +183,12 @@
   // Add all params to the post body
   // Per the myGengo API, these params must be sorted alphabetically by key
   NSMutableString *CompleteBody = nil;
-  NSArray *SortedKeys = [[params allKeys] sortedArrayUsingSelector:@selector(compare:)];
+  NSArray *SortedKeys = [[CompleteParams allKeys] sortedArrayUsingSelector:@selector(compare:)];
   for (NSString* Key in SortedKeys){
     if (CompleteBody == nil) {
-      CompleteBody = [NSString stringWithFormat:@"%@=%@", Key, [params objectForKey:Key]];
+      CompleteBody = [NSMutableString stringWithFormat:@"%@=%@", Key, [CompleteParams objectForKey:Key]];
     }else{
-      [CompleteBody appendFormat:@"&%@=%@", Key, [params objectForKey:Key]];
+      [CompleteBody appendFormat:@"&%@=%@", Key, [CompleteParams objectForKey:Key]];
     }
   }
   
