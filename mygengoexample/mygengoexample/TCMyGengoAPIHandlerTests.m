@@ -36,9 +36,13 @@
   NIDASSERT([[Handler apiSignatureWithTimestamp:TS] isEqualToString:@"747679f918caa870382a37c9effdd149ff5d1229"]);
   
   // Use this GET call to step through the GET stack.
-  [Handler getAccountStats];
+  //[Handler getAccountStats];
   
-  [Handler getAccountBalance];
+  //[Handler getAccountBalance];
+  
+  //[Handler getServiceLanguages];
+  
+  //[Handler getServiceLanguagePairs:[NSDictionary dictionaryWithObject:@"en" forKey:@"lc_src"]];
 }
 
 
