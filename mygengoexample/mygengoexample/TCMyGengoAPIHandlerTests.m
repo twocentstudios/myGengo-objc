@@ -35,6 +35,14 @@
   NIDINFO(@"API Signature: %@",[Handler apiSignatureWithTimestamp:TS]);
   NIDASSERT([[Handler apiSignatureWithTimestamp:TS] isEqualToString:@"747679f918caa870382a37c9effdd149ff5d1229"]);
   
+  // Test Job
+  NSDictionary *Job = [NSDictionary dictionaryWithObjectsAndKeys:@"text", @"type", 
+                       @"Test Slug", @"slug", 
+                       @"Hallo zusammen", @"body_src", 
+                       @"de", @"lc_src", 
+                       @"en", @"lc_tgt", 
+                       @"standard", @"tier", nil];
+  
   // Use this GET call to step through the GET stack.
   //[Handler getAccountStats];
   
@@ -45,6 +53,13 @@
   //[Handler getServiceLanguagePairs:[NSDictionary dictionaryWithObject:@"en" forKey:@"lc_src"]];
   
   //[Handler getServiceLanguagePairs:[NSDictionary dictionaryWithObject:@"1" forKey:@"id"]];
+  
+  
+  //[Handler getTranslationJob:[NSDictionary dictionaryWithObjectsAndKeys:@"209568", @"id", @"0", @"pre_mt", nil]];
+  
+  //[Handler getTranslationJobs:[NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObjects:@"1",@"2", @"3", nil], @"ids",  nil]];
+  
+//  [Handler postTranslationJob:[NSDictionary dictionaryWithObject:Job forKey:@"job"]];
 }
 
 
