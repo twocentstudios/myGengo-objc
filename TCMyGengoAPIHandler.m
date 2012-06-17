@@ -184,11 +184,23 @@
   [DictionaryParams setObject:[self apiSignatureWithTimestamp:Timestamp] forKey:@"api_sig"];
   [DictionaryParams setObject:_credentials.publicKey forKey:@"api_key"];
   
-  // If id parameter is included, append it to the endpoint first, then remove it
+  // If id(s) parameter is included, append it to the endpoint first, then remove it
   NSMutableString *CompleteEndpoint = [NSMutableString stringWithString:endpoint];
   if ([DictionaryParams objectForKey:@"id"] != nil) {
     [CompleteEndpoint appendFormat:@"/%@", [DictionaryParams objectForKey:@"id"]];
     [DictionaryParams removeObjectForKey:@"id"];
+  }else if([DictionaryParams objectForKey:@"ids"] != nil) {
+    // [[DictionaryParams objectForKey:@"ids"] isKindOfClass:[NSArray class]];
+    NSMutableString *IDList = nil;
+    for (NSString *ID in [DictionaryParams objectForKey:@"ids"]){
+      if (IDList == nil){
+        IDList = [NSMutableString stringWithFormat:@"/%@", ID];
+      }else{
+        [IDList appendFormat:@",%@", ID];
+      }
+    }
+    [CompleteEndpoint appendString:IDList];
+    [DictionaryParams removeObjectForKey:@"ids"];
   }
   
   // Add endpoint
