@@ -75,10 +75,20 @@
 - (id)initWithDelegate:(id<TCMyGengoAPIHandlerDelegate>)delegate;
 
 // Stats for the current account
-- (void) getAccountStats;
+- (void)getAccountStats;
 
 // Balance for the current account
-- (void) getAccountBalance;
+- (void)getAccountBalance;
+
+// Currently supported languages
+- (void)getServiceLanguages;
+
+// Currently supported language pairs
+// Options:
+// lc_src - Optional two-character language code to filter the results on
+- (void)getServiceLanguagePairs:(NSDictionary *)params;
+
+
 
 # pragma mark Private
 

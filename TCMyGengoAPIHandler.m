@@ -310,4 +310,12 @@
   [self getFromMyGengoEndPoint:@"account/balance" withParams:nil isDelete:NO];
 }
 
+- (void)getServiceLanguages{
+  [self getFromMyGengoEndPoint:@"translate/service/languages" withParams:nil isDelete:NO];
+}
+
+- (void)getServiceLanguagePairs:(NSDictionary *)params{
+  [self getFromMyGengoEndPoint:@"translate/service/language_pairs" withParams:params isDelete:NO];
+}
+
 @end
