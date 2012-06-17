@@ -43,6 +43,8 @@
   //[Handler getServiceLanguages];
   
   //[Handler getServiceLanguagePairs:[NSDictionary dictionaryWithObject:@"en" forKey:@"lc_src"]];
+  
+  //[Handler getServiceLanguagePairs:[NSDictionary dictionaryWithObject:@"1" forKey:@"id"]];
 }
 
 
