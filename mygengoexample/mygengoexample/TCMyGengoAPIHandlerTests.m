@@ -35,14 +35,33 @@
   NIDINFO(@"API Signature: %@",[Handler apiSignatureWithTimestamp:TS]);
   NIDASSERT([[Handler apiSignatureWithTimestamp:TS] isEqualToString:@"747679f918caa870382a37c9effdd149ff5d1229"]);
   
-  // Test Job
-  NSDictionary *Job = [NSDictionary dictionaryWithObjectsAndKeys:@"text", @"type", 
+  // Test Job 1 - 209571 - group 16522
+  NSDictionary *Job1 = [NSDictionary dictionaryWithObjectsAndKeys:@"text", @"type", 
                        @"Test Slug", @"slug", 
                        @"Hallo zusammen", @"body_src", 
                        @"de", @"lc_src", 
                        @"en", @"lc_tgt", 
                        @"standard", @"tier", nil];
   
+  // Test Job 2 - ------
+  NSDictionary *Job2 = [NSDictionary dictionaryWithObjectsAndKeys:@"text", @"type", 
+                       @"Nice", @"slug", 
+                       @"Nice to meet you", @"body_src", 
+                       @"en", @"lc_src", 
+                       @"ja", @"lc_tgt", 
+                       @"standard", @"tier", nil];
+  
+  // Test Job 3 - 209572
+  NSDictionary *Job3 = [NSDictionary dictionaryWithObjectsAndKeys:@"text", @"type", 
+                        @"Nice", @"slug", 
+                        @"Sprekin ze Deutch", @"body_src", 
+                        @"de", @"lc_src", 
+                        @"en", @"lc_tgt", 
+                        @"standard", @"tier", nil];
+  // Test Jobs Array
+  NSArray *Jobs = [NSArray arrayWithObjects:Job1, Job2, nil];
+  NSArray *JobsGroupable = [NSArray arrayWithObjects:Job1, Job3, nil];
+    
   // Use this GET call to step through the GET stack.
   //[Handler getAccountStats];
   
@@ -55,11 +74,36 @@
   //[Handler getServiceLanguagePairs:[NSDictionary dictionaryWithObject:@"1" forKey:@"id"]];
   
   
-  //[Handler getTranslationJob:[NSDictionary dictionaryWithObjectsAndKeys:@"209568", @"id", @"0", @"pre_mt", nil]];
+  //[Handler getTranslationJob:[NSDictionary dictionaryWithObjectsAndKeys:@"209572", @"id", @"0", @"pre_mt", nil]];
   
   //[Handler getTranslationJobs:[NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObjects:@"1",@"2", @"3", nil], @"ids",  nil]];
   
-//  [Handler postTranslationJob:[NSDictionary dictionaryWithObject:Job forKey:@"job"]];
+  //[Handler postTranslationJob:[NSDictionary dictionaryWithObject:Job1 forKey:@"job"]];
+  
+  //[Handler postTranslationJobs:[NSDictionary dictionaryWithObject:Jobs forKey:@"jobs"]];
+  //[Handler postTranslationJobs:[NSDictionary dictionaryWithObjectsAndKeys:Jobs, @"jobs", @"1", @"as_group", nil]]; // returns error
+  //[Handler postTranslationJobs:[NSDictionary dictionaryWithObjectsAndKeys:JobsGroupable, @"jobs", @"1", @"as_group", nil]];
+  
+  //[Handler postTranslationJobsForQuote:[NSDictionary dictionaryWithObject:Jobs forKey:@"jobs"]];
+  
+  //[Handler getTranslationJobGroup:[NSDictionary dictionaryWithObject:@"16522" forKey:@"id"]];
+  
+  //[Handler getTranslationJobFeedback:[NSDictionary dictionaryWithObject:@"209571" forKey:@"id"]];
+  
+  //[Handler postTranslationJobComment:[NSDictionary dictionaryWithObjectsAndKeys:@"direct comment.", @"body", @"209571", @"id", nil]];
+  
+  //[Handler getTranslationJobComments:[NSDictionary dictionaryWithObject:@"209571" forKey:@"id"]];
+
+  //[Handler updateTranslationJob:[NSDictionary dictionaryWithObjectsAndKeys:@"209571", @"id", @"revise", @"action", @"Do it again.", @"comment", nil]];
+  //[Handler updateTranslationJob:[NSDictionary dictionaryWithObjectsAndKeys:@"209571", @"id", @"approve", @"action", @"5", @"rating", @"Good job, translator", @"for_translator", @"Good job, staff", @"for_mygengo", @"1", @"public", nil]];
+  //[Handler updateTranslationJob:[NSDictionary dictionaryWithObjectsAndKeys:@"209572", @"id", @"reject", @"action", @"quality", @"reason", @"Not your best", @"comment", @"AJTV", @"captcha", @"requeue", @"follow_up", nil]];
+  
+  //[Handler postTranslationJob:[NSDictionary dictionaryWithObject:Job2 forKey:@"job"]];
+  //[Handler deleteTranslationJob:[NSDictionary dictionaryWithObject:@"209574" forKey:@"id"]];
+  
+  //[Handler getTranslationJobRevisions:[NSDictionary dictionaryWithObject:@"209571" forKey:@"id"]];
+  
+  //[Handler getTranslationJobRevision:[NSDictionary dictionaryWithObjectsAndKeys:@"209571", @"id", @"455336", @"rev_id", nil]];
 }
 
 
