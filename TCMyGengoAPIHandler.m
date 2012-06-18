@@ -44,6 +44,8 @@
 
 @end
 
+
+
 @implementation TCMyGengoAPIHandler
 
 @synthesize credentials = _credentials;
@@ -75,6 +77,9 @@
 
 #pragma mark Private
 
+///////////////////////////////////////////////////////////////////////////////////////
+// Helpers
+
 - (NSString *)formattedTimestamp{
   // We're using the Unix timestamp as the data. Not sure if this is right...
   return [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]];
@@ -97,6 +102,10 @@
 
   return HMAC;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+// Endpoint methods
 
 - (void)getFromMyGengoEndPoint:(NSString*)endpoint 
                               withParams:(NSDictionary*)params

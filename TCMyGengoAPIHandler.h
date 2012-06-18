@@ -15,7 +15,7 @@
 
 #define API_HOST @"api.mygengo.com"
 #define SANDBOX_API_HOST @"api.sandbox.mygengo.com"
-#define API_VERSION @"2"
+#define API_VERSION @"1.1"
 #define WRAPPER_VERSION @"0.1"
 #define USER_AGENT @"myGengo ObjC Library; Version %@; http://twocentstudios.com/;" //@"myGengo Ruby Library; Version 1.8; http://mygengo.com/;"
 
@@ -127,6 +127,8 @@
 // array of jobs for key "jobs"
 // dictionary of job params for each job
 // job -> type/slug/body_src/lc_src/lc_tgt/tier/auto_approve/comment/callback_url/custom_data
+// Optional:
+// as_group - 0 or 1
 - (void)postTranslationJobs:(NSDictionary *)params;
 
 // Posts a new translation job or jobs to the server for a quote
@@ -159,7 +161,7 @@
 // Posts a new comment on a job
 // Required:
 // id - id of the job
-// comment (dict) -> body (dict) - full text of the comment
+// body - full text of the comment
 - (void)postTranslationJobComment:(NSDictionary *)params;
 
 
