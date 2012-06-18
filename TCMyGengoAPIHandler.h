@@ -15,7 +15,7 @@
 
 #define API_HOST @"api.mygengo.com"
 #define SANDBOX_API_HOST @"api.sandbox.mygengo.com"
-#define API_VERSION @"2"
+#define API_VERSION @"1.1"
 #define WRAPPER_VERSION @"0.1"
 #define USER_AGENT @"myGengo ObjC Library; Version %@; http://twocentstudios.com/;" //@"myGengo Ruby Library; Version 1.8; http://mygengo.com/;"
 
