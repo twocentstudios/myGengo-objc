@@ -15,7 +15,7 @@ Unofficial [myGengo](http://mygengo.com/api) API Wrapper for Objective-C
 ## Requirements (iOS)
 I would pull these from github and drag the source files into your project.
 
-* [APIHTTPRequest](https://github.com/pokeb/asi-http-request/tree) and all its requirements including:
+* [APIHTTPRequest](https://github.com/pokeb/asi-http-request/tree) and all its requirements including...
 	* CFNetwork.framework
 	* MobileCoreServices.framework
 	* SystemConfiguration.framework
@@ -33,7 +33,6 @@ The .h file is moderately well documented, but you should also see the myGengo A
 First, initialize the singleton class that encapsulates your credentials. You only have to do this once and these credentials will be shared to all your API Wrapper instances.
 
 	// AppDelegate -> application:didFinishLaunchingWithOptions:
-	
 	[[TCMyGengoAPICredentials sharedCredentials] setCredentialsWithPublicKey:SANDBOX_PUBLIC_KEY privateKey:SANDBOX_PRIVATE_KEY isSandboxed:YES];
 	
 ### Handler
@@ -41,20 +40,19 @@ First, initialize the singleton class that encapsulates your credentials. You on
 Create a new instance of TCMyGengoAPIHandler for each controller and initialize it with your shared credentials object.
 
 	// MyViewController -> init
-	// (Assuming you have a _handler instance variable)	
+	// (Assuming you have a _handler instance variable)
 	_handler = [[TCMyGengoAPIHandler alloc] initWithDelegate:self credentials:[TCMyGengoAPICredentials sharedCredentials]];
 	
 Or you can use the convenience initializer which assumes you're using `[TCMyGengoAPICredentials sharedCredentials]`.
 
 	// MyViewController -> init (alternate)
-	
 	_handler = [[TCMyGengoAPIHandler alloc] initWithDelegate:self];
 
 ### Making Calls
 
 Making a call is pretty straightforward. Most methods take a generic NSDictionary of params. Check the myGengo API docs or the .h file for usage info. Any call that needs a job id should have a key for "id" for example.
 
-	// Simple get call with no parameters
+	// Simple GET call with no parameters
 	[_handler getAccountBalance];
 	
 	// Getting info about a translation job 
@@ -91,7 +89,7 @@ Now that you've made the call, implement the delegate methods. Each delegate met
 ## TODO
 
 * translate/job/{id}/preview (GET) is not yet implemented.
-* translate/jobs/{id} (PUT) is not yet implemented (although it's singular version is).
+* translate/jobs/{id} (PUT) is not yet implemented (although its singular version is).
 * ARC compatibility.
 * Optional callbacks with blocks.
 * OS X compatibility.
