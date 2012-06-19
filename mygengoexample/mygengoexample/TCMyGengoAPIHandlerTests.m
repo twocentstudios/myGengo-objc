@@ -18,8 +18,8 @@
 
 #import "TCMyGengoAPIHandlerTests.h"
 
-#define SANDBOX_PUBLIC_KEY @"qXXw)^)v$Z(AwLVlYoCE}Wwar57zeI9kCe6G9kREq{2keb~qu0kS9-BuZzAvO=ko"
-#define SANDBOX_PRIVATE_KEY @"1D9dM)kk#IGmuvRU3QYZ[~FtbL]dAgnmaw8pea[(u^ns3V-MNRGxgptUf7zyB~LO"
+#define SANDBOX_PUBLIC_KEY @"YOUR-KEY-HERE"
+#define SANDBOX_PRIVATE_KEY @"YOUR-KEY-HERE"
 
 @implementation TCMyGengoAPIHandlerTests
 
