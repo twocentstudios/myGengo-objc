@@ -1,10 +1,19 @@
 //
 //  TCMyGengoAPIHandler.h
 //  
+//  Copyright 2012 Christopher Trott
 //
-//  Created by Christopher Trott on 6/14/12.
-//  Copyright (c) 2012 TwoCentStudios. All rights reserved.
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
 //
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -17,7 +26,7 @@
 #define SANDBOX_API_HOST @"api.sandbox.mygengo.com"
 #define API_VERSION @"1.1"
 #define WRAPPER_VERSION @"0.1"
-#define USER_AGENT @"myGengo ObjC Library; Version %@; http://twocentstudios.com/;" //@"myGengo Ruby Library; Version 1.8; http://mygengo.com/;"
+#define USER_AGENT @"myGengo ObjC Library; Version %@; http://twocentstudios.com/;"
 
 // Classes that use the API Handler should implement the delegate protocol
 // in order to receive feedback as to the status of their requests and
